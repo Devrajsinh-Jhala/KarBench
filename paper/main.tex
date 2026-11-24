@@ -1,182 +1,466 @@
-\documentclass[11pt,letterpaper]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage{mathptmx}
-\usepackage{microtype,booktabs,array,tikz}
-\usepackage[hidelinks]{hyperref}
-\setlength{\parskip}{0.38em}
-\setlength{\parindent}{0pt}
-\setlength{\emergencystretch}{1.5em}
+% !TeX program = pdflatex
+\documentclass[10pt,letterpaper,twocolumn]{article}
 
-\title{KarBench: Can Language Models Calculate and Cite Indian Income Tax?}
-\author{Devraj Jhala \\ \small Software Engineer II, Cisco, India}
-\date{24 November 2026}
-\hypersetup{pdftitle={KarBench: Can Language Models Calculate and Cite Indian Income Tax?},pdfauthor={Devraj Jhala}}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx,courier}
+\usepackage{microtype}
+\usepackage[letterpaper,top=0.71in,bottom=0.71in,left=0.74in,right=0.74in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{dblfloatfix}
+\usepackage{flushend}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\columnsep}{0.24in}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\textfloatsep}{12pt plus 3pt minus 2pt}
+\setlength{\dbltextfloatsep}{12pt plus 3pt minus 2pt}
+\setlength{\floatsep}{9pt plus 2pt minus 1pt}
+\setlength{\dblfloatsep}{9pt plus 2pt minus 1pt}
+\renewcommand{\dbltopfraction}{0.88}
+\renewcommand{\topfraction}{0.86}
+\renewcommand{\bottomfraction}{0.65}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.77}
+\renewcommand{\dblfloatpagefraction}{0.77}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}
+\setcounter{totalnumber}{5}
+\captionsetup[figure]{skip=5pt}
+\captionsetup[table]{position=top,skip=4pt}
+\emergencystretch=0.9em
+\raggedbottom
+
+\hypersetup{
+  pdftitle={KarBench: Can Language Models Calculate and Cite Indian Income Tax?},
+  pdfauthor={Devraj Jhala},
+  pdfsubject={Evaluation of tax calculation and statutory citation},
+  pdfkeywords={Indian income tax, statutory citation, temporal legal reasoning, language model evaluation}
+}
+
+\title{\bfseries KarBench: Can Language Models Calculate and Cite\\ Indian Income Tax?}
+\author{Devraj Jhala\\[2pt]
+  \small Software Engineer}
+\date{\small 24 November 2026}
+
 \begin{document}
-\maketitle
-\begin{abstract}
-Correct tax arithmetic can conceal use of the wrong law. We introduce KarBench, a benchmark for calculating Indian personal income tax and citing the applicable statute across the transition from the Income-tax Act, 1961 to the Income-tax Act, 2025. We evaluate six model configurations from four providers on 100 synthetic salaried profiles paired across three income periods and three access modes, for 5,400 attempts. On the 600 closed-book attempts under the 2025 Act, 303 got both final taxes and the regime choice exactly right within protocol, while zero provided a complete citation set. Giving the applicable rule card improved exact-tax accuracy in every configuration and produced complete citations in 569 of the 600 attempts under the new Act. A separate analysis of saved responses above the benchmark cap finds that Grok 4.7 medium calculated 88 of 100 closed-book new-Act cases exactly, including 80 correct answers above the cap. All 100 named the correct Act and period and abstained on every section field. Tax calculation, statutory citation and completion therefore warrant separate reporting.
-\end{abstract}
+
+\twocolumn[{
+
+  \maketitle
+
+  \begin{center}
+
+    \begin{minipage}{0.935\textwidth}
+
+      \small
+
+      \begin{center}\textbf{Abstract}\end{center}
+
+      A language model can compute the right tax and still cite the wrong law. KarBench uses India's transition from the Income-tax Act, 1961 to the Income-tax Act, 2025 to measure these outcomes separately. We evaluate four model families from four providers in six configurations on the same 100 synthetic salaried profiles, crossed with three periods and three modes of access to rules (5,400 attempts). In closed-book Tax Year (TY) 2026--27, 303 of 600 attempts met the exact-tax and regime-choice criterion within protocol and none supplied a complete citation set. Dated rules in context raised exact-tax success in every configuration across the three periods and yielded complete citations on 569 of 600 TY 2026--27 attempts. A separate audit of Grok 4.7 medium recovers usable answers for all 100 closed-book transition-year profiles, including 91 above the study's output limit. Of these 100 answers, 88 computed both taxes and selected the recommended regime correctly. All 100 identified the Act and period and omitted every section identifier, as the prompt permitted for unknown identifiers. Comparison with DeepSeek's output-limit responses shows why completion status and usable answer coverage require separate reporting in cross-provider evaluations.
+
+      \par\medskip
+
+      \noindent\textbf{Keywords:} Indian income tax \textperiodcentered{} statutory citation \textperiodcentered{} temporal legal reasoning \textperiodcentered{} language model evaluation
+
+    \end{minipage}
+
+  \end{center}
+
+  \vspace{0.9em}
+
+}]
 
 \section{Introduction}
 
-Assessment Year (AY) 2026--27 refers to income earned in Financial Year (FY) 2025--26 under the Income-tax Act, 1961. Tax Year (TY) 2026--27 refers to the subsequent income period under the Income-tax Act, 2025~\cite{act25,transition}. The same year numbers denote different statutory authorities. In KarBench, 98 of 100 profiles have identical final tax totals under both regimes across these adjacent periods. A grading system that scores only the numbers would miss many errors in the governing Act or section.
+When an individual asks a language model how much income tax is due, the numeric result answers only part of the question. A reviewer also needs to establish which law governed the income period and which provisions support the calculation. Citations make it possible to distinguish a valid interpretation from an answer that reached the same amount by coincidence. A benchmark that grades only the amount can miss this distinction whenever two versions of the law yield the same liability.
 
-KarBench evaluates three outcomes on the same answers: exact tax and regime choice, completeness of the applicable references, and completion under the evaluation protocol. We vary whether the model receives the applicable rules or must obtain them from a bounded tool environment. The repository archives the aggregate tables and reproducibility materials~\cite{artifacts}.
+India's recent statutory transition provides a concrete test. Assessment Year (AY) 2026--27 ordinarily refers to income earned in Financial Year (FY) 2025--26 under the Income-tax Act, 1961. Tax Year (TY) 2026--27 under the Income-tax Act, 2025 covers the following income period, beginning on 1 April 2026 \cite{act2025,taxfaq,pib}. Both labels contain ``2026--27,'' but the Act and key section numbers differ. For example, the rebate provision mapped by the benchmark changes from section 87A to section 156, and the new-regime provision changes from section 115BAC to section 202. A model can recognize the latest Act, reproduce the correct tax, and still supply a section from the earlier law or leave the field blank.
+
+The difficulty is measurable in the reference data. For 98 of our 100 profiles, both final liabilities are identical under the two newest periods, even though the expected citations change. For all 100, the new-regime liability alone is identical across those periods. This overlap limits what we can infer from correct tax totals. It also gives us a paired design for asking whether models carry the correct legal authority through the calculation while holding the taxpayer's facts fixed.
+
+KarBench evaluates three questions. \textbf{Can a model calculate and substantiate the tax from memory?} Closed-book answers let us observe exact tax, period selection and section-level citation on the same attempt. \textbf{How much does access to the applicable law change performance?} We compare directly supplied dated rules with an agent that must select and read evidence from an archive, then finish within a fixed budget. \textbf{How do inference limits change the result we measure?} We audit whether an output-limit label corresponds to missing answer text or a usable answer outside the benchmark ceiling, then report both the protocol result and an offline sensitivity analysis.
+
+The study compares six configurations across four providers on 900 planned attempts each. Its contributions are a paired suite of 300 period-specific cases with deterministic traces, a rubric that distinguishes obsolete references from permitted and required blanks, and a cross-provider audit of how completion and token limits affect the reported outcome. The public supplement documents the evaluation protocol and provides the aggregate tables.
 
 \section{Related work}
 
-SARA evaluates statutory reasoning using US tax provisions~\cite{sara}. TaxCalcBench measures exact US tax calculation from structured inputs and documents~\cite{taxcalc}. LegalBench and IL-TUR cover broader legal reasoning and Indian legal text tasks~\cite{legalbench,iltur}. Indian legal exam benchmarks and work on legal hallucinations identify problems with authority and citation accuracy~\cite{courtready,fictions}. KarBench pairs identical Indian salaried profiles across a statutory transition to measure whether the model's numbers and legal references change when the applicable law changes.
+\textbf{Indian income tax.}
+The LE-BTL study uses an IRAC+ rubric to evaluate legal reasoning on Indian tax questions, including income tax and GST \cite{lebtl}. The \texttt{itact-785} benchmark is the closest overlap on the 2025 Act. Its 785 locked tasks cover which Act applies across 1 April 2026, section crosswalks, tax deducted at source, and entity-level rates and deadlines. It uses strict entity matching without an LLM judge \cite{itact}. KarBench pairs identical salaried profiles across tax periods and scores two computed liabilities, regime choice, and statutory identifiers on each answer. It also varies access to dated rules within the same set of cases. Veeramani et al. compare an LLM-only system, retrieval, and a neuro-symbolic engine on 20 Indian tax scenarios under the 1961 Act \cite{ntol}.
 
-\section{Benchmark design}
+\textbf{Temporal applicability and citation drift.}
+\texttt{sanhita} tests section mapping and citation carry-over after India's IPC-to-BNS transition, including selecting the applicable criminal code for dated events \cite{sanhita}. Prior et al. use 312 expert-validated German statutory questions to study outdated responses after amendments and the use of current law for historical questions \cite{oldfriend}. Huang et al.'s TALD-Bench evaluates selection of the applicable statute version across China's civil-law transition \cite{tald}. KarBench studies the same temporal failure modes in personal income tax. Its paired numerical keys let us test whether an incorrect liability matches another period and whether a correct liability can distinguish between periods.
 
-\subsection{Cases and reference answers}
+\textbf{Tax computation and legal benchmarks.}
+SARA pairs U.S. tax statutes with entailment and numerical questions \cite{sara}; TaxCalcBench measures U.S. personal tax calculation from taxpayer inputs \cite{taxcalcbench}. LegalBench and IL-TUR cover broader legal reasoning and Indian legal text understanding, respectively \cite{legalbench,iltur}. Related studies have examined the use of legal authority in Indian legal questions and errors about authorities in U.S. law \cite{courtready,legalfictions}. KarBench records obsolete identifiers, required blanks, and permitted rebate blanks separately.
 
-The development set pairs 100 synthetic profiles across FY 2024--25, FY 2025--26 and TY 2026--27. The first 20 are diagnostic anchors, 40 target thresholds and 40 are general cases. The 60-case pilot is a subset of the 300-case set. Profiles represent resident salaried adults below 60 and cover slabs, salary deductions, house rent allowance (HRA), retirement contributions, eligible interest, rebate and marginal relief, cess and rounding. The benchmark excludes surcharge, special-rate income and business income. Prompt wordings vary how the income period is stated.
+\section{Benchmark and protocol}
 
-A deterministic Decimal engine computes both final taxes and records intermediate steps. It recommends the new regime on an exact tie for scoring consistency. The previous Act and the 2025 Act use different section identifiers for the new regime, rebate, standard deduction and rounding. Rule 279 also changes which cities qualify for the 50\% salary term in the HRA formula~\cite{act25,rules26}. As a result, some paired profiles differ numerically even where most do not.
+\subsection{Case construction and dated authorities}
 
-\begin{table}[!htbp]
-\centering\small
-\setlength{\tabcolsep}{4pt}
-\caption{Expected period labels and principal statutory references. The scorer recognizes applicable aliases.}\label{tab:law}
-\begin{tabular}{@{} >{\raggedright\arraybackslash}p{0.129\linewidth} >{\raggedleft\arraybackslash}p{0.146\linewidth} >{\raggedleft\arraybackslash}p{0.069\linewidth} >{\raggedleft\arraybackslash}p{0.120\linewidth} >{\raggedleft\arraybackslash}p{0.095\linewidth} >{\raggedleft\arraybackslash}p{0.112\linewidth} >{\raggedleft\arraybackslash}p{0.189\linewidth}@{}}
-\toprule
-\textbf{Income period} & \textbf{Label} & \textbf{Act} & \textbf{New regime} & \textbf{Rebate} & \textbf{Deduction} & \textbf{Rounding} \\
-\midrule
-FY 2024--25 & AY 2025--26 & 1961 & 115BAC & 87A & 16(ia) & 288A and 288B \\
-FY 2025--26 & AY 2026--27 & 1961 & 115BAC & 87A & 16(ia) & 288A and 288B \\
-TY 2026--27 & Tax Year 2026--27 & 2025 & 202 & 156 & 19 & 516 \\
-\bottomrule
-\end{tabular}
+The development set comprises 100 synthetic resident salaried adults under 60. The first 20 profiles are diagnostic anchors, 40 emphasize thresholds, and 40 cover general cases. Every profile is instantiated in FY 2024--25, FY 2025--26 and TY 2026--27, for 300 cases. The task expresses the income period as a date range, year end, or FY/AY label in 102, 99 and 99 cases, respectively. The 60-case pilot is a subset of the same design.
+
+Cases cover slabs, rebates and marginal relief, standard deduction, house rent allowance, retirement contributions, eligible savings interest, home-loan interest, health and education cess, and rounding. The scope excludes surcharge, special-rate income, business income and most investment income. Rule cards pin the period-specific provisions (Table~\ref{tab:authorities}). The 2026 rules also expand from four to eight the cities eligible for the 50\% salary term used in the house rent allowance formula \cite{rules2026}.
+
+\begin{table}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{3pt}
+  \caption{Period labels and statutory identifiers used in scoring. The 2025 Act standard deduction is in section 19(1). The benchmark pins accepted aliases by period \cite{act2025,taxfaq,pib,rules2026}.}
+  \label{tab:authorities}
+  \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrr@{}}
+    \toprule
+    \textbf{Field} & \textbf{FY 2024--25} & \textbf{FY 2025--26} & \textbf{TY 2026--27} \\
+    \midrule
+    Required label & AY 2025--26 & AY 2026--27 & TY 2026--27 \\
+    Act & 1961 & 1961 & 2025 \\
+    New regime & 115BAC & 115BAC & 202 \\
+    Rebate section & 87A & 87A & 156 \\
+    Std. deduction & 16(ia) & 16(ia) & 19 \\
+    Rounding & 288A and 288B & 288A and 288B & 516 \\
+    \bottomrule
+  \end{tabular*}
 \end{table}
 
-\subsection{Evaluation conditions}
+A deterministic decimal-arithmetic engine computes both regimes, component traces and counterfactual taxes under the other periods' rules. The benchmark recommends the cheaper regime and selects the new regime on exact ties. The old regime is cheaper on 11, 1 and 1 profiles in the three periods, and the regimes tie on 9, 12 and 13, respectively. Consequently, the new regime is the designated recommendation on 287/300 cases. Reporting both liability amounts is essential given this imbalance.
 
-Closed book supplies the profile and answer schema. Rules in context adds the applicable dated rule card. Agent mode allows rule search and lookup across all three periods and access to a calculator. The six model configurations each evaluate 300 cases once in each of the three modes. The requested endpoints were deepseek-flash (thinking enabled, low), gpt-6-luna (low and medium), claude-haiku-5-5 (adaptive, low and medium) and grok-4.7 (medium). Provider effort levels are API settings and do not imply equal compute.
+\begin{table}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{3pt}
+  \caption{Reference answer for the same INR\,12,75,000 salary profile (P0001) under three periods. The last two rows illustrate identical amounts under different statutory identifiers.}
+  \label{tab:worked-example}
+  \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrr@{}}
+    \toprule
+    \textbf{Period} & \textbf{Old tax} & \textbf{New tax} & \textbf{Rebate sec.} \\
+    \midrule
+    FY 2024--25 & INR\,1,87,200 & INR\,83,200 & 87A \\
+    FY 2025--26 & INR\,1,87,200 & INR\,0 & 87A \\
+    TY 2026--27 & INR\,1,87,200 & INR\,0 & 156 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
 
-The protocol sets 8,192 metered output tokens per request, 16,384 per agent episode, six agent turns and four tool calls per turn. The standard timeout was 240 seconds and Grok's was 900. DeepSeek, Luna and Haiku used provider request controls. Grok responses were scored against the cap after receipt. We retain cutoff rows in the planned-attempt denominator and examine their parseable answers in a separate sensitivity analysis.
+The salary anchor in Table~\ref{tab:worked-example} illustrates the transition. FY 2025--26 and TY 2026--27 share the same zero new-regime liability after a INR\,60,000 rebate. An answer for the newer period that cites section 87A therefore satisfies the arithmetic on this case while failing the rebate citation field.
 
-\section{Scoring}
+\subsection{Modes, model settings and stopping rules}
 
-Exact tax requires exact rounded final liabilities in both regimes and the correct regime recommendation. Complete citation requires the governing Act, income-period label and all applicable section fields. The comparison rubric accepts a blank rebate section if both predicted and reference rebate or relief are zero in both regimes. Full-answer accuracy also checks intermediate amounts. The INR 1 variant tolerates up to one rupee per intermediate amount, with final totals still exact.
+Each model receives a taxpayer profile and a common output schema for both regimes and the legal identifiers. \textbf{Closed book} permits no retrieval. \textbf{Rules in context} includes the authored card for the applicable period. \textbf{Agent} offers archive search, archive reads and a calculator. The archive contains cards for all three periods, and the model chooses what to read. The supplied materials contain the rules and examples of their application without exposing the scored profile's reference answer.
 
-Protocol-level rates use all planned attempts and require a completed outcome. Finished-answer rates use only completed rows. We also rescore parseable saved answers from output-limit rows offline and add them to the numerator of a separate all-attempt sensitivity analysis. The paired profile bootstrap uses 10,000 draws over the 100 profiles and keeps all three periods together. Its exploratory percentile intervals reflect variation over profiles, with one inference attempt per identity.
+\begin{table}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{3pt}
+  \caption{Four providers and six model configurations. Each configuration evaluates exactly 900 planned case-mode pairs.}
+  \label{tab:model-configurations}
+  \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lllr@{}}
+    \toprule
+    \textbf{Provider} & \textbf{Endpoint} & \textbf{Reasoning} & \textbf{Attempts} \\
+    \midrule
+    DeepSeek & deepseek-flash & Thinking, low & 900 \\
+    OpenAI & gpt-6-luna & Low, medium & 900 each \\
+    Anthropic & claude-haiku-5-5 & Adaptive low, med. & 900 each \\
+    xAI & grok-4.7 & Medium & 900 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+The shared protocol uses 8,192 metered output tokens per request and 16,384 per agent episode, with up to six agent turns and four tool calls per turn. Request timeouts were 240 seconds for DeepSeek, Luna and Haiku and 900 seconds for Grok. The first three providers used request-level controls. Grok was checked against the limit after the full response arrived, so its raw logs can retain usable over-cap outputs. The reasoning presets in Table~\ref{tab:model-configurations} are provider-specific API settings. Token accounting and cap enforcement vary across the adapters. The frozen DeepSeek run records DeepSeek-V4.1-Flash-1017 as its expected model version.
+
+Each configuration contributes 300 attempts per mode and 100 in each mode-by-period cell. Recorded infrastructure retries preserve the intended case identity. DeepSeek replaced five infrastructure failures, one in closed book and four in agent mode. Haiku medium replaced three transport failures. The comparison retains one reviewed Luna medium transport failure, on a TY 2026--27 closed-book case. The protocol denominator remains 100 in that cell. Removing the failed row raises the exact-tax fraction from 62/100 to 62/99 and leaves the citation count at zero.
+
+\subsection{Scoring, denominators and uncertainty}
+
+\textbf{Exact tax} requires both final rounded liabilities and the designated regime. \textbf{Complete citations} requires the governing Act, period label and applicable identifiers for the new regime, rebate, standard deduction and rounding. \textbf{Exact full answer} requires both of these and all intermediate numeric amounts in both regimes. \textbf{INR\,1 full answer} allows each intermediate amount to differ by at most INR\,1 while keeping the rounded liabilities, recommendation and citations exact. The two full-answer scores therefore measure accuracy at different levels of intermediate precision.
+
+The shared comparison scorer accepts a blank rebate field when both reference and predicted rebate or relief are zero in both regimes. Elsewhere, blank required fields fail. Recognized prior-law identifiers and AY terminology under the 2025 Act are counted as stale. The remaining mismatches include unsupported identifiers and period-label strings outside the frozen accepted forms. The prompt explicitly asks models to leave unknown legal identifiers blank. A required blank is a failure to supply the reference under this setup.
+
+Primary rates use every planned attempt and require a completed episode. Conditional rates use completed responses as the denominator. Our offline sensitivity analysis also scores parseable final JSON saved on output-limit rows and adds these passes to a separate numerator with the planned denominator. The original run status is retained. The 95\% intervals used for the rules-in-context gain are paired percentile intervals from 10,000 resamples of the 100 profiles, retaining all three years of each resampled profile. They characterize profile-set variation under this one-run design.
 
 \section{Results}
 
-\subsection{Supplying rules improves exact tax}
+\subsection{Tax accuracy improves when the dated rules are supplied}
 
-Rules in context improved exact-tax rates in every configuration. Gains ranged from 18.0 to 49.3 percentage points. DeepSeek increased from 227/300 (75.7\%) to 288/300 (96.0\%). Grok's largest gain includes a substantial change in completion. With its usable over-cap outputs included, the Grok gain shrinks from 49.3 to 4.7 percentage points (280/300 to 294/300).
+Rules in context produced the highest exact-tax and INR\,1 full-answer rate in every configuration (Figure~\ref{fig:modes}). Across the three periods, DeepSeek's exact-tax success rose from 227/300 (75.7\%) in closed book to 288/300 (96.0\%) with rules, a 20.3 percentage-point gain (95\% profile interval 15.3--25.7). The smallest protocol-level gain was 18.0 points for Luna low (11.0--24.7). Grok's 49.3-point gain (43.3--55.3) partly reflects its much higher finish rate when rules were supplied. When its over-cap answers are included, the exact-tax gain is 4.7 points (280/300 to 294/300).
 
-\begin{table}[!htbp]
-\centering\small
-\setlength{\tabcolsep}{4pt}
-\caption{Finished and exact-tax results across access modes and exact-tax change with rules. Each configuration has 900 total attempts and 300 attempts per mode.}\label{tab:results}
-\begin{tabular}{@{} >{\raggedright\arraybackslash}p{0.189\linewidth} >{\raggedleft\arraybackslash}p{0.129\linewidth} >{\raggedleft\arraybackslash}p{0.129\linewidth} >{\raggedleft\arraybackslash}p{0.155\linewidth} >{\raggedleft\arraybackslash}p{0.146\linewidth} >{\raggedleft\arraybackslash}p{0.112\linewidth}@{}}
-\toprule
-\textbf{Configuration} & \textbf{Finished /900} & \textbf{Exact tax /900} & \textbf{Closed book /300} & \textbf{With rules /300} & \textbf{Gain (pp)} \\
-\midrule
-DeepSeek Flash & 737 & 718 & 227 & 288 & 20.3 \\
-Luna low & 829 & 522 & 149 & 203 & 18.0 \\
-Luna medium & 839 & 667 & 196 & 255 & 19.7 \\
-Haiku low & 898 & 711 & 183 & 279 & 32.0 \\
-Haiku medium & 868 & 735 & 210 & 286 & 25.3 \\
-Grok medium & 463 & 452 & 82 & 230 & 49.3 \\
-\bottomrule
-\end{tabular}
+\begin{figure*}[!tb]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/modes.pdf}
+  \caption{Access-mode comparison across the six configurations. Each marker represents 300 planned attempts. Both panels use the full 0--100\% scale. Rule cards improve both metrics in every configuration relative to closed book.}
+  \label{fig:modes}
+\end{figure*}
+
+\begin{table*}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{5pt}
+  \caption{Protocol scores for all planned attempts (900 per row). Exact tax includes regime choice. Complete citations can pass independently of tax.}
+  \label{tab:all-scores}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrr@{}}
+    \toprule
+    \textbf{Configuration} & \textbf{Finished} & \textbf{Exact tax} & \textbf{Complete citations} & \textbf{INR\,1 full answer} & \textbf{Exact full answer} \\
+    \midrule
+    DeepSeek Flash & 737 (81.9\%) & 718 (79.8\%) & 649 (72.1\%) & 631 (70.1\%) & 611 (67.9\%) \\
+    Luna low & 829 (92.1\%) & 522 (58.0\%) & 709 (78.8\%) & 383 (42.6\%) & 288 (32.0\%) \\
+    Luna medium & 839 (93.2\%) & 667 (74.1\%) & 730 (81.1\%) & 567 (63.0\%) & 531 (59.0\%) \\
+    Haiku low & 898 (99.8\%) & 711 (79.0\%) & 714 (79.3\%) & 569 (63.2\%) & 334 (37.1\%) \\
+    Haiku medium & 868 (96.4\%) & 735 (81.7\%) & 704 (78.2\%) & 590 (65.6\%) & 330 (36.7\%) \\
+    Grok medium & 463 (51.4\%) & 452 (50.2\%) & 453 (50.3\%) & 437 (48.6\%) & 418 (46.4\%) \\
+    \bottomrule
+  \end{tabular*}
+\end{table*}
+
+Across all 900 attempts per configuration (Table~\ref{tab:all-scores}), Haiku medium had the highest exact-tax count (735), and DeepSeek had the highest INR\,1 full-answer count (631). The intermediate tolerance changed full-answer counts by 20 for DeepSeek, 95 and 36 for Luna low and medium, 235 and 260 for Haiku low and medium, and 19 for Grok. A saved Haiku-low diagnostic found that cess was the sole intermediate numeric mismatch on 214 of 377 exact-tax successes that failed exact full scoring. Those rows could also contain a citation error. Applying the uniform inapplicable-rebate rule moved DeepSeek's exact closed-book full-answer score from 42/300 to 145/300. The cross-model full-answer comparisons here use the uniform rule throughout.
+
+\subsection{Closed-book tax and citations diverge under the 2025 Act}
+
+In TY 2026--27, 303/600 closed-book attempts passed exact tax within protocol (Table~\ref{tab:transition}). Zero supplied all the required citations. Every configuration had cases in which the tax and recommendation were correct but the legal references were incomplete. Complete citations were restored on 569/600 rule-assisted attempts and 480/600 agent attempts. All 569 finished rule-assisted responses had complete citations. In agent mode 480 of 482 finished answers had complete citations, with the other 118 attempts ending early.
+
+\begin{table*}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{5pt}
+  \caption{TY 2026--27, 100 planned attempts per configuration and mode. CB denotes closed book. ``CB incl. over cap'' is a secondary tax score. Citation columns count only in-protocol passes.}
+  \label{tab:transition}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
+    \toprule
+    \textbf{Configuration} & \textbf{CB finished} & \textbf{CB exact tax} & \textbf{CB incl. over cap} & \textbf{CB citations} & \textbf{Rules citations} & \textbf{Agent citations} \\
+    \midrule
+    DeepSeek Flash & 54 & 51 & 51 & 0 & 96 & 70 \\
+    Luna low & 100 & 50 & 50 & 0 & 94 & 89 \\
+    Luna medium & 99 & 62 & 62 & 0 & 95 & 88 \\
+    Haiku low & 100 & 61 & 61 & 0 & 100 & 99 \\
+    Haiku medium & 100 & 71 & 71 & 0 & 100 & 97 \\
+    Grok medium & 9 & 8 & 88 & 0 & 84 & 37 \\
+    \bottomrule
+  \end{tabular*}
+\end{table*}
+
+Figure~\ref{fig:citations} shows how the field-level errors differ across models. DeepSeek named the old Act on 43/54 usable answers. Haiku low and medium named the correct Act on 100 and 99 of 100, respectively, but used a stale period label on 91 answers each. Luna medium supplied the correct new-regime section on 78/99. It omitted the rounding reference on 96 and gave a mismatching value on three. Across all six configurations, not a single closed-book answer in this period supplied a correct rounding reference.
+
+Grok correctly identified both the Act and period on all 100 usable closed-book TY 2026--27 responses. The new-regime, standard deduction and rounding fields were blank on all 100. All rebate fields were also blank. The grader accepted 63 rebate blanks as inapplicable, and 37 omitted an applicable identifier. The 91 over-cap responses exhibit the same pattern as the nine finished responses. Of their 91 rebate blanks, 57 passed and 34 failed. Exact tax passed on 8/9 finished and 80/91 over-cap answers, or 88/100 combined. These records show what the system supplied under an abstention instruction. They cannot establish whether a direct citation-only question would elicit a section number.
+
+\begin{figure*}[!tb]
+  \centering
+  \includegraphics[width=0.97\textwidth]{figures/citations.pdf}
+  \caption{Field-level decisions for usable closed-book TY 2026--27 responses. Sample sizes in model order are 54, 100, 99, 100, 100 and 100. Grok includes 91 parseable over-cap responses. An accepted blank is an inapplicable rebate field.}
+  \label{fig:citations}
+\end{figure*}
+
+\subsection{Counterfactual-year tax signatures}
+
+For every finished closed-book episode, the diagnostic compares the pair of reported rounded liabilities against all three reference periods for the same profile. The diagnostic uses the liability pair alone and excludes regime choice and citation fields. A pair equal to the intended year's key and an alternative year's key cannot identify which rules produced the answer.
+
+Across 1,522 finished closed-book episodes, 270 pairs matched only the requested period, 777 matched it and at least one alternative, 12 matched an alternative while missing the requested period, and 463 matched none. Among the 475 episodes whose pair missed the requested period, 12 (2.5\%) matched an alternative. The corresponding counts were 1 for DeepSeek, 3 and 2 for Luna low and medium, 2 and 4 for Haiku low and medium, and 0 for Grok. This analysis uses the frozen run aggregates in Supplement Table B6 \cite{karbench}.
+
+The two 1961 Act keys for FY 2024--25 and FY 2025--26 share both liabilities for 18 of the 100 profiles. A directional test would separately count mismatched FY 2025--26 responses that match FY 2024--25 and mismatched FY 2024--25 responses that match FY 2025--26. Table B6 pools target periods, so it does not resolve those counts. An alternative match is a signature of the tax amounts and cannot by itself identify which statute the model applied.
+
+\subsection{The output filter changes which answers are observed}
+
+Grok's full run includes 463 completed episodes, 280 output-limit episodes, 122 tool-call-limit episodes and 35 turn-limit episodes. Completion in closed book declined from 46/100 in FY 2024--25 to 29/100 in FY 2025--26 and 9/100 in TY 2026--27. Rules in context finished 76, 76 and 84, respectively. The agent finished 49, 57 and 37, and its early endings came entirely from tool-call and turn ceilings. As Figure~\ref{fig:coverage} shows, the 463 completed episodes give different weights to the nine experimental cells. The conditional exact-tax rate of 452/463 (97.6\%) describes that selected subset (Table~\ref{tab:grok-conditional}).
+
+\begin{figure*}[!tb]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/coverage.pdf}
+  \caption{Grok run outcomes by mode and period. Each bar contains 100 attempts. The nine finished closed-book answers in TY 2026--27 represent 9\% of the cell, versus 46\% in the earliest period.}
+  \label{fig:coverage}
+\end{figure*}
+
+\begin{table*}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{4pt}
+  \caption{Grok performance on completed responses. Coverage uses all planned attempts. For the four score columns, $n$ is the number of passing answers and the percentage uses completed responses as its denominator.}
+  \label{tab:grok-conditional}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrrrr@{}}
+    \toprule
+    & \multicolumn{1}{c}{\textbf{Coverage}} &
+      \multicolumn{2}{c}{\textbf{Exact tax}} &
+      \multicolumn{2}{c}{\textbf{Complete citations}} &
+      \multicolumn{2}{c}{\textbf{INR 1 full answer}} &
+      \multicolumn{2}{c}{\textbf{Exact full answer}} \\
+    \cmidrule(lr){2-2}\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}
+    \textbf{Mode} & \textbf{Finished / planned} & $n$ & \% & $n$ & \% & $n$ & \% & $n$ & \% \\
+    \midrule
+    Closed book & 84/300 & 82 & 97.6 & 74 & 88.1 & 73 & 86.9 & 68 & 81.0 \\
+    Rules in context & 236/300 & 230 & 97.5 & 236 & 100.0 & 225 & 95.3 & 212 & 89.8 \\
+    Agent & 143/300 & 140 & 97.9 & 143 & 100.0 & 139 & 97.2 & 138 & 96.5 \\
+    \midrule
+    All modes & 463/900 & 452 & 97.6 & 453 & 97.8 & 437 & 94.4 & 418 & 90.3 \\
+    \bottomrule
+  \end{tabular*}
+\end{table*}
+
+All 280 Grok output-limit episodes had provider status \texttt{completed} and parseable final JSON, with recorded output above 8,192 tokens. Their reported reasoning consumed 3,191,275 of 3,236,563 output tokens (98.6\%). Reasoning alone exceeded the limit on 270 rows. Reported output minus reported reasoning is a proxy for other output, including visible answer text. Its median on the capped Grok rows was 165 tokens, with a range of 142--175 (Figure~\ref{fig:tokens}). In the newest closed-book cell, median reasoning was 11,976 tokens, median other output was 150, and reasoning alone crossed the limit on 90/91 rows.
+
+DeepSeek's 72 output-limit episodes instead ended with provider reason \texttt{length}. Seventy-one contained empty final text and one contained text that failed JSON parsing. Their total reported reasoning was 589,720 tokens, with only 104 other output tokens. Neither Luna nor Haiku had a recorded output-limit termination. These differences concern the observed provider and runner behavior. The benchmark applied the same nominal ceiling with different enforcement mechanisms.
+
+\begin{figure*}[!tb]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/tokens.pdf}
+  \caption{Median component counts on capped responses. Other output is total metered output minus reported reasoning. Axes differ by panel. The dashed line marks the benchmark's 8,192-token request ceiling.}
+  \label{fig:tokens}
+\end{figure*}
+
+The secondary analysis adds 198 Grok closed-book and 64 rule-assisted exact-tax successes across the three periods (Figure~\ref{fig:sensitivity}). Agent results receive no additions. Overall Grok exact tax increases from 452/900 (50.2\%) to 714/900 (79.3\%) under this sensitivity analysis. The closed-book TY 2026--27 citation count remains zero. For rule-assisted TY 2026--27, the usable over-cap responses increase complete citations from 84/100 to 100/100. Both results matter: the benchmark shows which outputs met its limits, and the sensitivity analysis shows what the provider had already returned.
+
+\begin{figure*}[!tb]
+  \centering
+  \includegraphics[width=0.90\textwidth]{figures/sensitivity.pdf}
+  \caption{Grok exact-tax and regime-choice counts with usable over-cap answers added offline. Each mode has 300 planned attempts. The total at the end of each bar uses the same denominator as the protocol score.}
+  \label{fig:sensitivity}
+\end{figure*}
+
+\subsection{Tool use, metering and cost}
+
+Tool limits affected completed workflows as well as early endings (Table~\ref{tab:tool-use}). Of 209 successful DeepSeek agent episodes, 121 used the maximum four tools in at least one turn and 31 finished on turn six. The corresponding Grok values were 79 and 27 of 143. Successful agent episodes used a median of seven tools for DeepSeek and six for Grok, counted across turns. Tool-call-limit endings across configurations ranged from 2 for Haiku low to 122 for Grok. A direct rule card removes evidence selection and the additional calls required for retrieval, which helps explain why the agent comparisons should be interpreted as workflow outcomes.
+
+\begin{table}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{3pt}
+  \caption{Tool use on completed agent episodes. Done counts completed episodes. Tools is the total executions, Median is tools per episode, At 4 counts episodes reaching four in a turn, and Turn 6 counts completions on the sixth turn.}
+  \label{tab:tool-use}
+  \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrr@{}}
+    \toprule
+    \textbf{Configuration} & \textbf{Done} & \textbf{Tools} & \textbf{Median} & \textbf{At 4} & \textbf{Turn 6} \\
+    \midrule
+    DeepSeek Flash & 209 & 1549 & 7 & 121 & 31 \\
+    Luna low & 266 & 1120 & 4 & 75 & 1 \\
+    Luna medium & 251 & 1070 & 4 & 73 & 13 \\
+    Haiku low & 298 & 935 & 3 & 3 & 0 \\
+    Haiku medium & 268 & 1139 & 4 & 35 & 0 \\
+    Grok medium & 143 & 999 & 6 & 79 & 27 \\
+    \bottomrule
+  \end{tabular*}
 \end{table}
 
-\subsection{Under the 2025 Act, exact tax and correct citations diverge}
-
-Models got both taxes and the regime correct on 303/600 closed-book attempts under the 2025 Act within protocol. Complete citations were 0/600 closed book, 569/600 with rules in context and 480/600 with tools. The citation errors differed by model. DeepSeek named the previous Act on 43 of 54 finished closed-book answers. Both Haiku configurations used a stale period label on 91 of 100. Luna medium named the new-regime section correctly on 78 of 99 finished answers and left the rounding field empty on 96.
-
-\begin{table}[!htbp]
-\centering\small
-\setlength{\tabcolsep}{4pt}
-\caption{TY 2026--27. Each configuration has 100 planned attempts in each mode. Tax counts include the correct regime choice. Citation completeness applies the rebate-blank rule.}\label{tab:citations}
-\begin{tabular}{@{} >{\raggedright\arraybackslash}p{0.189\linewidth} >{\raggedleft\arraybackslash}p{0.172\linewidth} >{\raggedleft\arraybackslash}p{0.172\linewidth} >{\raggedleft\arraybackslash}p{0.163\linewidth} >{\raggedleft\arraybackslash}p{0.163\linewidth}@{}}
-\toprule
-\textbf{Configuration} & \textbf{Closed-book exact tax} & \textbf{Closed-book citations} & \textbf{With-rules citations} & \textbf{Agent citations} \\
-\midrule
-DeepSeek Flash & 51 & 0 & 96 & 70 \\
-Luna low & 50 & 0 & 94 & 89 \\
-Luna medium & 62 & 0 & 95 & 88 \\
-Haiku low & 61 & 0 & 100 & 99 \\
-Haiku medium & 71 & 0 & 100 & 97 \\
-Grok medium & 8 & 0 & 84 & 37 \\
-\bottomrule
-\end{tabular}
+\begin{table}[!tb]
+  \centering\small
+  \setlength{\tabcolsep}{3pt}
+  \caption{Local USD cost ledger for the full runs. Rounded cells can differ from sums computed using source precision. The uncertain reserve records unresolved requests.}
+  \label{tab:costs}
+  \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrr@{}}
+    \toprule
+    \textbf{Configuration} & \textbf{Usage} & \textbf{Reserve} & \textbf{Ledger} & \textbf{Cap} \\
+    \midrule
+    DeepSeek Flash & \$6.51 & \$0.07 & \$6.58 & \$10.00 \\
+    Luna low & \$0.76 & \$0.03 & \$0.79 & \$10.00 \\
+    Luna medium & \$1.04 & \$0.01 & \$1.05 & \$3.00 \\
+    Haiku low & \$1.33 & \$0.00 & \$1.33 & \$4.00 \\
+    Haiku medium & \$1.53 & \$0.02 & \$1.55 & \$4.00 \\
+    Grok medium & \$44.05 & \$3.26 & \$47.31 & \$48.50 \\
+    \midrule
+    Total & \$55.22 & \$3.40 & \$58.61 & --- \\
+    \bottomrule
+  \end{tabular*}
 \end{table}
 
-\begin{figure}[!htbp]
-\centering
-\begin{tikzpicture}[x=0.080cm,y=0.085cm,font=\small]
-\foreach \t in {0,25,50,75,100} {
-  \draw[gray!25] (0,\t) -- (93,\t);
-  \node[anchor=east,font=\footnotesize] at (-1,\t) {\t\%};
-}
-\draw[gray!75] (0,0) -- (93,0);
-\fill[teal!67!black] (38,0) rectangle (56,94.83);
-\fill[teal!67!black] (68,0) rectangle (86,80);
-\draw[teal!67!black,line width=0.8pt] (8,0.5) -- (26,0.5);
-\node[font=\footnotesize,anchor=south] at (17,2) {0/600};
-\node[font=\footnotesize,anchor=south] at (47,95) {569/600};
-\node[font=\footnotesize,anchor=south] at (77,81) {480/600};
-\node[anchor=north] at (17,-3) {Closed book};
-\node[anchor=north] at (47,-3) {Rules in context};
-\node[anchor=north] at (77,-3) {Agent};
-\end{tikzpicture}
-\caption{Complete citations under the 2025 Act by access mode, using all 600 planned attempts per mode.}
-\label{fig:citations}
-\end{figure}
+Recorded usage across the six configuration IDs (Table~\ref{tab:costs}) was \$55.22 with \$3.40 in uncertain reservations. The ledger total was \$58.61 when summed before rounding. Grok accounted for \$44.05 of recorded usage, including the 60-episode pilot (\$2.79) counted once in the full run. The \$3.26 uncertain Grok reserve represents four requests with unresolved metering. These are local ledger amounts. Provider invoice amounts can differ. No new provider calls were used for offline scoring, citation buckets, or the sensitivity analysis.
 
-\subsection{Output limits hide usable answers}
+\section{Discussion and limitations}
 
-Grok finished 463 of 900 attempts, with 280 output-limit, 122 tool-call-limit and 35 turn-limit outcomes. All 280 output-limit rows contained parseable final JSON. Reported reasoning tokens accounted for 98.6\% of their metered output. By comparison, 71 of 72 DeepSeek output-limit rows had empty final text and the remaining row failed parsing. The same nominal cap thus corresponds to different observed failure modes.
+\textbf{A correct amount is a weak test of current authority.} The paired profiles reveal why legal benchmarks need both numeric and source-level criteria. Most liabilities in the two latest periods are identical, so an answer can appear correct under either statute. Some models transfer older identifiers, others supply the new Act without the new period label, and Grok abstains on section fields. Scoring each field makes those differences visible. A legal workflow can use such signals to decide when to ask for supporting text or request human review.
 
-In TY 2026--27 closed book, Grok got exact tax and regime choice on 8 of 9 finished answers and 80 of 91 parseable over-cap answers. All 100 named the correct Act and period and left all four section fields blank. The prompt permits blanks for unknown identifiers. These data show abstention in the task context and cannot establish whether the model would retrieve the sections in a direct citation-only task.
+\textbf{Completion measures a system and its limits together.} Comparing finished-answer averages across providers can hide different proportions of cases discarded by metering, retrieval limits or transport failures. Grok's severe closed-book cap effect and DeepSeek's missing final text illustrate distinct outcomes that carry the same benchmark label. The sensitivity scores describe answers available offline, and the protocol scores describe the configured deployment constraint. Equal nominal token limits do not guarantee equal effective inference budgets.
 
-\section{Limitations}
+\textbf{Scope and reference validation.}
+The study covers synthetic English-language cases for resident salaried taxpayers and a defined set of provisions. Boundary cases are deliberately oversampled. Reusing 100 profiles across periods supports paired comparisons. Independent sampling and repeated inference would help estimate how results generalize beyond these profiles.
 
-The profiles and prompts are synthetic, English-language and restricted to a salaried population. Benchmark rates describe this set and the tested model configurations. Provider token accounting, request limits and effort settings differ, and cap sensitivity is specific to saved usable responses. No repeated inference trials estimate model stochasticity. The 30-case independent review packet is available, with case-level reviewer calculations and dispositions pending documentation. The presented scores use the frozen diagnostic engine reference.
+The frozen manifests, engine and period rule files passed integrity checks. Recomputing the reference answers reproduced all 300 saved keys, including 100 from FY 2024--25 and 100 from FY 2025--26. This establishes reproducibility of the older-year keys with the pinned engine. For the salary anchor in Table~\ref{tab:worked-example}, a separate arithmetic check using tax department guidance reproduced both liabilities in AY 2025--26 and AY 2026--27 \cite{salaried25,salaried26}. A chartered accountancy student reviewed the 30-case packet (8, 11, and 11 cases across the three periods) and flagged the wording of the common house rent allowance (HRA) assumption. We use the frozen engine key as the scoring reference. The review provided qualitative feedback without a case-level agreement tally.
+
+\textbf{HRA prompt wording.} The common prompt stated that rent was actually paid for accommodation the employee did not own. In 210 of the 300 cases (70 profiles), the structured inputs specify zero rent and zero HRA. In rent-paying cases, the clause clarifies the eligibility facts for the old-regime exemption. The engine uses the structured amounts and yields zero HRA exemption in both regimes for the 210 zero-input cases. The reported evaluation used the original wording. Its effect on model responses was not measured.
+
+\textbf{Interpretation of omissions.} The instructions permit blanks when identifiers are unknown. Our closed-book finding concerns observed omissions and stale citations under this prompt. A citation-only test with a separate abstention condition could measure what models supply when they are asked directly for each provision. Neither conditional accuracy nor the cap sensitivity isolates provider, model family and reasoning preset effects.
 
 \section{Conclusion}
 
-KarBench shows that a model can calculate the right tax while omitting or misidentifying the applicable statutory references. Supplying dated rules improves both outcomes, and completion constraints can hide otherwise usable outputs. Reporting these measures individually makes the difference visible.
+KarBench measures whether models can compute Indian income tax and support the result with the law in force for the relevant period. On the 600 closed-book attempts under the 2025 Act, 303 passed exact tax within protocol and none supplied the full citation set. Supplying dated rules improved tax accuracy in every configuration and restored complete citations on 569/600 transition-year attempts. Grok's offline audit found 88/100 exact closed-book answers in that period and no supplied section identifiers. Together, these findings show why model evaluations for statutory tasks should report amounts, legal references and coverage separately.
 
-\section{Data and code availability}
+\section*{Data and code availability}
 
-The KarBench repository contains the study's aggregate results and supplementary analyses~\cite{artifacts}. The supplement records case and run identifiers, protocol hashes, coverage, costs and sensitivity tables. Row-by-row reproduction of the reported live scores needs the original provider responses and the corresponding run snapshots.
+The \href{https://github.com/Devrajsinh-Jhala/KarBench}{public KarBench repository} \cite{karbench} hosts the supplement and aggregate CSVs, including scores by mode and period, citation buckets, protocol hashes, token counts, cost ledgers, and frozen run identifiers. The repository also hosts the frozen synthetic cases, reference answers, and authored rule cards. Full row-level reproduction requires the original provider outputs and matching experiment snapshots.
 
-\section{Use of generative AI}
+\section*{Acknowledgments and AI disclosure}
 
-Anthropic Claude~\cite{claude} suggested the initial idea for KarBench and was used in early project development. OpenAI ChatGPT~\cite{chatgpt} assisted with manuscript drafting and revision and with preparing figures from the benchmark results. Model use in the experiments is described separately in Benchmark design.
+Anthropic Claude \cite{claude} suggested the initial benchmark idea and supported early project development. OpenAI ChatGPT \cite{chatgpt} assisted with manuscript drafting, revision and figure preparation based on the recorded benchmark results. The author is responsible for the reported methods and claims.
 
-\clearpage
+
 \begin{thebibliography}{99}
-\bibitem{act25} Government of India. \emph{Income-tax Act, 2025, as amended by the Finance Act, 2026}. \S\S 1, 3, 19, 156, 202, 516 and 536. \href{https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf}{Official text}
 
-\bibitem{transition} Income Tax Department. \emph{General Questions FAQs}. Transition between AY 2026--27 and TY 2026--27. \href{https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/General\%20Questions-faqs}{Department guidance}
+\small
 
-\bibitem{rules26} Central Board of Direct Taxes. \emph{Income-tax Rules, 2026}, Notification 22/2026, G.S.R. 198(E), 20 March 2026, Rule 279. \href{https://www.incometaxindia.gov.in/documents/d/guest/en-notified-it-rules-2026-20-03-2026-pdf}{Notified text}
+\bibitem{act2025}
+Government of India. \textit{Income-tax Act, 2025}, as amended by the Finance Act, 2026. Act 30 of 2025, §§ 1, 3, 19, 156, 202, 516, 536. \href{https://www.incometaxindia.gov.in/documents/d/guest/income\_tax\_act\_2025\_as\_amended\_by\_fa\_act\_2026-pdf}{Official text}
 
-\bibitem{sara} Holzenberger, N., Blair-Stanek, A., and Van Durme, B. \emph{A Dataset for Statutory Reasoning in Tax Law Entailment and Question Answering}. 2020. \href{https://arxiv.org/abs/2005.05257}{Paper}
+\bibitem{taxfaq}
+Income Tax Department. \textit{General Questions FAQs}. Guidance on the transition from Assessment Year 2026--27 to Tax Year 2026--27. \href{https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/General\%20Questions-faqs}{Department guidance}
 
-\bibitem{taxcalc} Bock, M. R., Molisee, K., Ozer, Z., and Shah, S. \emph{TaxCalcBench: Evaluating Frontier Models on the Tax Calculation Task}. 2025. \href{https://arxiv.org/abs/2507.16126}{Paper} · \href{https://github.com/column-tax/tax-calc-bench}{Benchmark repository}
+\bibitem{pib}
+Press Information Bureau, Ministry of Finance. \textit{Income-tax Act, 2025 comes into force from today (1st April, 2026)}. 1 April 2026. \href{https://www.pib.gov.in/PressReleasePage.aspx?PRID=2248005\&lang=1\&reg=3}{Release}
 
-\bibitem{legalbench} Guha, N., et al. \emph{LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models}. NeurIPS, 2023. \href{https://proceedings.neurips.cc/paper_files/paper/2023/hash/89e44582fd28ddfea1ea4dcb0ebbf4b0-Abstract-Datasets_and_Benchmarks.html}{Paper}
+\bibitem{rules2026}
+Central Board of Direct Taxes. \textit{Income-tax Rules, 2026}. Notification 22/2026, G.S.R. 198(E), 20 March 2026, Rule 279. \href{https://www.incometaxindia.gov.in/documents/d/guest/en-notified-it-rules-2026-20-03-2026-pdf}{Notified text}
 
-\bibitem{iltur} Kalamkar, P., et al. \emph{IL-TUR: Benchmark for Indian Legal Text Understanding and Reasoning}. ACL, 2024. \href{https://aclanthology.org/2024.acl-long.618/}{Paper}
+\bibitem{lebtl}
+N. Jain, N. Wadhwa, P. Goyal, S. Ghosh, S. Pawar, A. Shinde, K. Boinepally, V. V. Malpani, and R. K.
+LLM evaluations for Bharat Tax Laws (LE-BTL). A framework to evaluate and benchmark the accuracy of large language models in the context of the Indian tax laws. SSRN 5941734, 2025.
+\href{https://www.taxmann.com/post/blog/taxmann-ai-x-iit-kharagpur-llm-evaluation-le-btl-benchmark-study}{Study overview}.
 
-\bibitem{courtready} Juvekar, K., Bhattacharya, A., Khadloya, S., and Saxena, U. \emph{Are LLMs Court-Ready? Evaluating Frontier Models on Indian Legal Reasoning}. Natural Legal Language Processing Workshop, 2025. \href{https://aclanthology.org/2025.nllp-1.26/}{Paper}
+\bibitem{itact}
+Prasthana Lab. \emph{itact-785: Evaluation of applied Indian tax-law compliance under the Income-tax Act, 2025}. Repository and benchmark, 2026.
+\href{https://github.com/bugyal/itact-785/blob/30f97fdd2adc1b4c301832bd4116c642cd856eca/README.md}{Pinned repository documentation}.
 
-\bibitem{fictions} Dahl, M., Magesh, V., Suzgun, M., and Ho, D. E. \emph{Large Legal Fictions: Profiling Legal Hallucinations in Large Language Models}. 2024. \href{https://arxiv.org/abs/2401.01301}{Paper}
+\bibitem{ntol}
+K. Veeramani, Allen Joseph N, and Pavithran M.
+Neuro-symbolic reasoning engine for tax optimisation. \emph{Frontiers in Artificial Intelligence}, 9:1802755, 2026.
+\href{https://doi.org/10.3389/frai.2026.1802755}{doi:10.3389/frai.2026.1802755}.
 
-\bibitem{artifacts} Jhala, D. \emph{KarBench research artifacts}. \href{https://github.com/Devrajsinh-Jhala/KarBench}{https://github.com/Devrajsinh-Jhala/KarBench}.
+\bibitem{sanhita}
+rishikeshn-eng. \emph{sanhita}. Indian criminal-code citation checker and benchmark.
+\href{https://github.com/rishikeshn-eng/sanhita}{Source repository}.
 
-\bibitem{claude} Anthropic. \emph{Claude}. \href{https://claude.com/product/overview}{Product documentation}.
+\bibitem{oldfriend}
+M. Prior, A. Schultz, and M. Grabmair.
+Asking for an old friend: Diagnosing and mitigating temporal failure modes in LLM-based statutory question answering. 2026.
+\href{https://arxiv.org/abs/2605.23497}{arXiv:2605.23497}.
 
-\bibitem{chatgpt} OpenAI. \emph{ChatGPT}. \href{https://chatgpt.com/overview/}{Product documentation}.
+\bibitem{tald}
+Y. Huang et al.
+When do LLMs apply the wrong law? Diagnosing LLM failures in temporal legal reasoning. 2026.
+\href{https://arxiv.org/abs/2608.14610}{arXiv:2608.14610}.
+
+\bibitem{sara}
+Holzenberger, N., Blair-Stanek, A., and Van Durme, B. A dataset for statutory reasoning in tax law entailment and question answering. \textit{Natural Legal Language Processing Workshop}, 2020. \href{https://arxiv.org/abs/2005.05257}{arXiv:2005.05257}
+
+\bibitem{taxcalcbench}
+Bock, M. R., Molisee, K., Ozer, Z., and Shah, S. TaxCalcBench: Evaluating frontier models on the tax calculation task. 2025. \href{https://arxiv.org/abs/2507.16126}{arXiv:2507.16126}
+
+\bibitem{legalbench}
+Guha, N., et al. LegalBench: A collaboratively built benchmark for measuring legal reasoning in large language models. \textit{NeurIPS Datasets and Benchmarks}, 2023. \href{https://proceedings.neurips.cc/paper\_files/paper/2023/hash/89e44582fd28ddfea1ea4dcb0ebbf4b0-Abstract-Datasets\_and\_Benchmarks.html}{Proceedings}
+
+\bibitem{iltur}
+Kalamkar, P., et al. IL-TUR: Benchmark for Indian legal text understanding and reasoning. \textit{Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics}, 2024. \href{https://aclanthology.org/2024.acl-long.618/}{ACL Anthology}
+
+\bibitem{courtready}
+Juvekar, K., Bhattacharya, A., Khadloya, S., and Saxena, U. Are LLMs court-ready? Evaluating frontier models on Indian legal reasoning. \textit{Natural Legal Language Processing Workshop}, 2025. \href{https://aclanthology.org/2025.nllp-1.26/}{ACL Anthology}
+
+\bibitem{legalfictions}
+Dahl, M., Magesh, V., Suzgun, M., and Ho, D. E. Large legal fictions: Profiling legal hallucinations in large language models. \textit{Journal of Legal Analysis}, 16(1), 2024. \href{https://arxiv.org/abs/2401.01301}{arXiv:2401.01301}
+
+\bibitem{karbench}
+Jhala, D. \textit{KarBench}. Dataset, preprint, aggregate results, and supplementary methods, 2026. \href{https://github.com/Devrajsinh-Jhala/KarBench}{GitHub repository}
+
+\bibitem{salaried25}
+Income Tax Department. Salaried individuals for AY 2025--26. Tax slabs and guidance.
+\href{https://www.incometax.gov.in/iec/foportal/help/individual/return-applicable-3}{Department guidance}.
+
+\bibitem{salaried26}
+Income Tax Department. Salaried individuals for AY 2026--27. Tax slabs and guidance.
+\href{https://www.incometax.gov.in/iec/foportal/help/individual/return-applicable-1}{Department guidance}.
+
+\bibitem{claude}
+Anthropic. \textit{Claude}. Generative AI assistant. \href{https://www.anthropic.com/claude}{Product documentation}
+
+\bibitem{chatgpt}
+OpenAI. \textit{ChatGPT}. Generative AI assistant. \href{https://openai.com/chatgpt/overview/}{Product documentation}
+
 \end{thebibliography}
+
 \end{document}

@@ -1,14 +1,12 @@
-# Preprint
+# KarBench preprint
 
-- [Manuscript](manuscript.md)
-- [LaTeX source](main.tex)
-- [Supplementary material and protocol](supplement.md)
-- [Machine-readable tables](../results/preprint/)
+- [Read the paper](KarBench_Preprint_Devraj_Jhala.pdf)
+- [Download the arXiv source archive](KarBench_arXiv_Source.zip)
+- [Browse the LaTeX source](main.tex) and [vector figures](figures/)
+- [Read the supplement](supplement.md) and [browse the results](../results/preprint/)
 
-After installing a TeX Live distribution with the Times-compatible PSNFSS, TikZ and standard LaTeX packages, compile from this directory:
+To compile the paper with TeX Live, run this command from the paper directory.
 
-```sh
-latexmk -pdf -halt-on-error -interaction=nonstopmode main.tex
-```
+    latexmk -pdf -halt-on-error -interaction=nonstopmode main.tex
 
-The manuscript is a draft. Copyright Devraj Jhala.
+[CC BY 4.0 license](LICENSE.md)

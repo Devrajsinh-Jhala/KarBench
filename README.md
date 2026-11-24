@@ -1,19 +1,22 @@
 # KarBench
 
-**Can language models calculate and cite Indian income tax?**
-
-KarBench evaluates language models on exact personal income tax, regime choice and statutory citation. It uses 100 synthetic salaried profiles paired across FY 2024–25, FY 2025–26 and TY 2026–27. The paper compares closed-book, rules-in-context and tool-assisted evaluation across 5,400 attempts.
+KarBench tests whether language models can calculate Indian personal income tax and cite the law governing the income period. It follows 100 synthetic salaried profiles across FY 2024–25, FY 2025–26, and TY 2026–27. The preprint reports 5,400 evaluations across six model configurations and three settings with different access to dated rules.
 
 | Resource | Contents |
 |---|---|
-| [Preprint](paper/manuscript.md) | Design, scoring and headline results |
-| [LaTeX source](paper/main.tex) | Times-style typesetting and chart source |
-| [Supplement](paper/supplement.md) | Per-period outcomes, cutoff sensitivity, costs and run provenance |
-| [Aggregate results](results/preprint/) | CSV tables used in the preprint |
-| [Citation](CITATION.cff) | Citation metadata |
+| [Preprint PDF](paper/KarBench_Preprint_Devraj_Jhala.pdf) | Study design, findings, five figures, and eight tables |
+| [LaTeX source](paper/main.tex) and [figure files](paper/figures/) | Manuscript source and vector figures |
+| [arXiv source archive](paper/KarBench_arXiv_Source.zip) | Packaged manuscript and figures |
+| [Frozen dataset](data/) and [dataset card](DATASET_CARD.md) | Cases, reference answers, rule cards, and integrity hashes |
+| [Aggregate results](results/preprint/) and [supplement](paper/supplement.md) | Scores, protocol details, cutoff sensitivity, and run provenance |
+| [Citation metadata](CITATION.cff) | Author and project information |
 
 ## Main result
 
-On the TY 2026–27 closed-book attempts, 303 of 600 got both taxes and the regime recommendation exactly right within protocol and zero provided a complete citation set. Providing the applicable rule card restored complete citations in 569 of 600 attempts.
+Under the Income-tax Act, 2025, the models got both tax amounts and the regime recommendation right on 303 of 600 closed-book attempts. None supplied a complete set of statutory citations. Supplying the applicable rule card raised the number of complete citation sets to 569 of 600.
 
-The results use synthetic cases and the benchmark’s frozen engine reference. Case-level outcomes for the independent 30-case review are pending documentation. The released aggregate tables can be inspected directly. Exact row-by-row rescoring requires the original response and runner snapshots described in the supplement.
+The cases are synthetic and scored against a frozen reference engine. The 30-case review provided qualitative feedback. The original provider responses and matching experiment snapshots are required for exact row-level reproduction of the reported runs.
+
+## Licensing
+
+The [synthetic dataset and original rule cards](LICENSE-DATA.md) and the [preprint and its source](paper/LICENSE.md) are available under CC BY 4.0.

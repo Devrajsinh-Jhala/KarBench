@@ -1,0 +1,19 @@
+{
+  "dataset_version": "0.1.0",
+  "seed": 20261109,
+  "profile_count": 100,
+  "case_count": 300,
+  "pilot_case_count": 60,
+  "case_hash": "137eba54e920cf23ffdce7a9f9a410401bf853d1e78eff5193d2f9e0de9ede83",
+  "gold_hash": "b3e15658b4bd1fe427a725b558f3b904f3a565d215e3a3f66cd2a4549de62248",
+  "rule_hashes": {
+    "fy2024_25": "4745b7c5f8ad7d9edef11603c827046167d318b5b5d83952506dd54461a97793",
+    "fy2025_26": "576fd1bc692e3aafbca470e3dfaa1dd810094aef6a0ac1e1be582adadb8fc9c9",
+    "ty2026_27": "cf628aac1b1d1bb3ce97a4a6682b571bc65fcdeaf9646e572abee115be4ab77b"
+  },
+  "independent_review": "pending",
+  "synthetic": true,
+  "engine_source_hash": "6ad8300f369c6619e5a4e42a66e281e639c03e25f87ca59ae35b2b14ecb53c71",
+  "archive_hash": "d1a7c142803029bf8ec8c2fe40b0bcd85b591695064627820f88c603f4ea5512",
+  "note": "Public development dataset. No private held-out split is claimed."
+}

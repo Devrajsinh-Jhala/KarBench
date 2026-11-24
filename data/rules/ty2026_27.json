@@ -1,0 +1,286 @@
+{
+  "period": "ty2026_27",
+  "income_start": "2026-04-01",
+  "income_end": "2027-03-31",
+  "version": "0.1.0",
+  "independent_review": "pending",
+  "parameters": {
+    "old_slabs": {
+      "value": [
+        [
+          250000,
+          "0"
+        ],
+        [
+          500000,
+          "0.05"
+        ],
+        [
+          1000000,
+          "0.20"
+        ],
+        [
+          null,
+          "0.30"
+        ]
+      ],
+      "source": "https://www.indiabudget.gov.in/doc/memo.pdf",
+      "locator": "Resident individual under 60; old regime",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "new_slabs": {
+      "value": [
+        [
+          400000,
+          "0"
+        ],
+        [
+          800000,
+          "0.05"
+        ],
+        [
+          1200000,
+          "0.10"
+        ],
+        [
+          1600000,
+          "0.15"
+        ],
+        [
+          2000000,
+          "0.20"
+        ],
+        [
+          2400000,
+          "0.25"
+        ],
+        [
+          null,
+          "0.30"
+        ]
+      ],
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "202(1), printed PDF pp.264-265",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "old_standard_deduction": {
+      "value": 50000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "19(1), table row 2",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "new_standard_deduction": {
+      "value": 75000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "19(1), table row 2",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "old_rebate_threshold": {
+      "value": 500000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "156",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "old_rebate_cap": {
+      "value": 12500,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "156",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "new_rebate_threshold": {
+      "value": 1200000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "156",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "new_rebate_cap": {
+      "value": 60000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "156",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "80c_cap": {
+      "value": 150000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "123",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "80d_cap": {
+      "value": 25000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "126(2)(a)",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "employee_nps_cap": {
+      "value": 50000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "124",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "savings_cap": {
+      "value": 10000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "153(2)(a)",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "home_loan_cap_eligible": {
+      "value": 200000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "22(2)(a)",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "home_loan_cap_other": {
+      "value": 30000,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "22(2)(b)",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "hra_metro_share": {
+      "value": "0.50",
+      "source": "https://cewacor.nic.in/HRMSLanding/pdf_View?filePath=~%2FUpload%2FFinance%2FFinance_English_TAX_942fba0c-5090-4823-90e8-a6031ecf390e.pdf",
+      "locator": "Annexure-I item 3; rule 279; official CBDT endpoint recorded in source registry",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "hra_nonmetro_share": {
+      "value": "0.40",
+      "source": "https://cewacor.nic.in/HRMSLanding/pdf_View?filePath=~%2FUpload%2FFinance%2FFinance_English_TAX_942fba0c-5090-4823-90e8-a6031ecf390e.pdf",
+      "locator": "Annexure-I item 3; rule 279; official CBDT endpoint recorded in source registry",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "hra_rent_floor": {
+      "value": "0.10",
+      "source": "https://cewacor.nic.in/HRMSLanding/pdf_View?filePath=~%2FUpload%2FFinance%2FFinance_English_TAX_942fba0c-5090-4823-90e8-a6031ecf390e.pdf",
+      "locator": "Annexure-I item 3; rule 279; official CBDT endpoint recorded in source registry",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "hra_metros": {
+      "value": [
+        "Delhi",
+        "Mumbai",
+        "Kolkata",
+        "Chennai",
+        "Bombay",
+        "Calcutta",
+        "Madras",
+        "New Delhi",
+        "Hyderabad",
+        "Pune",
+        "Ahmedabad",
+        "Bengaluru"
+      ],
+      "source": "https://cewacor.nic.in/HRMSLanding/pdf_View?filePath=~%2FUpload%2FFinance%2FFinance_English_TAX_942fba0c-5090-4823-90e8-a6031ecf390e.pdf",
+      "locator": "Annexure-I item 3; rule 279; official CBDT endpoint recorded in source registry",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "government_nps_share": {
+      "value": "0.14",
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "124",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "old_private_nps_share": {
+      "value": "0.10",
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "124",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "new_private_nps_share": {
+      "value": "0.14",
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "124",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "cess_rate": {
+      "value": "0.04",
+      "source": "https://www.indiabudget.gov.in/doc/memo.pdf",
+      "locator": "Finance Bill 2026 memorandum, rates and 4% cess",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    },
+    "rounding_multiple": {
+      "value": 10,
+      "source": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "locator": "516",
+      "verified": true,
+      "verification_kind": "primary-source desk check",
+      "independent_review": "pending",
+      "checked_on": "2026-11-09"
+    }
+  },
+  "citations": {
+    "governing_act": "Income-tax Act, 2025",
+    "new_regime_section": "202",
+    "rebate_section": "156",
+    "standard_deduction_section": "19",
+    "rounding_sections": [
+      "516"
+    ],
+    "period_label": "Tax Year 2026-27"
+  },
+  "scope": "See DATASET_CARD.md; eligible inputs, full-year constant HRA facts, no special-rate income"
+}
