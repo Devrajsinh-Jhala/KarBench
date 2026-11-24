@@ -11,7 +11,7 @@ Correct tax arithmetic can conceal use of the wrong law. We introduce KarBench, 
 
 Assessment Year (AY) 2026–27 refers to income earned in Financial Year (FY) 2025–26 under the Income-tax Act, 1961. Tax Year (TY) 2026–27 refers to the subsequent income period under the Income-tax Act, 2025 [1, 2]. The same year numbers denote different statutory authorities. In KarBench, 98 of 100 profiles have identical final tax totals under both regimes across these adjacent periods. A grading system that scores only the numbers would miss many errors in the governing Act or section.
 
-KarBench evaluates three outcomes on the same answers: exact tax and regime choice, completeness of the applicable references, and completion under the evaluation protocol. We vary whether the model receives the applicable rules or must obtain them from a bounded tool environment. We release the dataset, baseline implementation, aggregate tables and reproducibility materials [10].
+KarBench evaluates three outcomes on the same answers: exact tax and regime choice, completeness of the applicable references, and completion under the evaluation protocol. We vary whether the model receives the applicable rules or must obtain them from a bounded tool environment. The repository archives the aggregate tables and reproducibility materials [10].
 
 ## Related work
 
