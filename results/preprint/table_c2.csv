@@ -1,0 +1,6 @@
+"Group","Capped","Reasoning","Other output","Median reasoning","Median other","Reasoning > cap","Parseable"
+"DeepSeek, all","72","589,720","104","8,192","0","0","0"
+"Grok, all","280","3,191,275","45,288","10,729","165","270","280"
+"Grok, closed book","216","2,548,129","34,666","11,188.5","165","211","216"
+"Grok, rules","64","643,146","10,622","9,560","167","59","64"
+"Grok, TY26–27 closed book","91","1,144,085","13,727","11,976","150","90","91"

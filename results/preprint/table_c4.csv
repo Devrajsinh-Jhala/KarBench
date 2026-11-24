@@ -1,0 +1,7 @@
+"Configuration","Successful agent episodes","Executions","Median tools","Reached 4 tools in one turn","Completed on turn 6"
+"DeepSeek Flash","209","1549","7","121","31"
+"Luna low","266","1120","4","75","1"
+"Luna medium","251","1070","4","73","13"
+"Haiku low","298","935","3","3","0"
+"Haiku medium","268","1139","4","35","0"
+"Grok medium","143","999","6","79","27"

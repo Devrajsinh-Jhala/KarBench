@@ -1,0 +1,5 @@
+"Provider","Requested endpoint model","Reasoning","Evaluations"
+"DeepSeek","deepseek-flash","Thinking enabled, low","900"
+"OpenAI","gpt-6-luna","Low and medium","900 each"
+"Anthropic","claude-haiku-5-5","Adaptive, low and medium","900 each"
+"xAI","grok-4.7","Medium","900"

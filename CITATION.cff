@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Please cite KarBench and include the dataset manifest hash when reporting comparisons."
+title: "KarBench"
+type: software
+repository-code: "https://github.com/Devrajsinh-Jhala/KarBench"
+authors:
+  - given-names: Devraj
+    family-names: Jhala
+preferred-citation:
+  type: report
+  title: "KarBench: Can Language Models Calculate and Cite Indian Income Tax?"
+  authors:
+    - given-names: Devraj
+      family-names: Jhala
+  year: 2026
+  url: "https://github.com/Devrajsinh-Jhala/KarBench"
+  notes: "Preprint draft"

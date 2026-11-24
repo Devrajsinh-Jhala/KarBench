@@ -1,0 +1,7 @@
+"Configuration","Closed book exact","Rules exact","Agent exact","Overall exact"
+"DeepSeek Flash","42 → 145","261 → 274","189 → 192","492 → 611"
+"Luna low","23 → 65","81 → 125","70 → 98","174 → 288"
+"Luna medium","33 → 112","126 → 227","124 → 192","283 → 531"
+"Haiku low","44 → 47","134 → 138","149 → 149","327 → 334"
+"Haiku medium","56 → 61","135 → 135","134 → 134","325 → 330"
+"Grok medium","24 → 68","167 → 212","101 → 138","292 → 418"
