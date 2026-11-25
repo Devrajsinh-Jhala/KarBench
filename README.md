@@ -15,6 +15,8 @@ KarBench tests whether language models can calculate Indian personal income tax 
 
 Under the Income-tax Act, 2025, 303 of 600 closed-book attempts matched both rounded engine liabilities and the benchmark-designated regime. None supplied a complete set of statutory citations. Supplying the applicable rule card raised the number of complete citation sets to 569 of 600.
 
+In a separate analysis of Grok's 100 usable closed-book answers for TY 2026-27, including 91 above the scoring cutoff, 88 matched both liabilities and the designated regime. All 100 left the section identifiers blank. Across periods, [12 of 475 incorrect closed-book liability pairs](results/preprint/table_b7.csv) matched another period's reference pair.
+
 The cases are synthetic and scored against a frozen reference engine. The 30-case review provided qualitative feedback. The scores describe the recorded provider configurations, whose deadlines and cutoff enforcement differed. See [revision 1.1](paper/revision-1.1.md) for the corrections and added checks. Reproducing the reported runs row by row requires the original provider responses and matching experiment snapshots.
 
 ## Licensing

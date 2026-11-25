@@ -43,8 +43,8 @@
 
 \title{\bfseries KarBench: Can Language Models Calculate and Cite\\ Indian Income Tax?}
 \author{Devraj Jhala\\[2pt]
-  \small Software Engineer}
-\date{\small Revision 1.1, 24 November 2026}
+  \small Independent Researcher, Bengaluru, India}
+\date{\small 25 November 2026}
 
 \begin{document}
 
@@ -60,7 +60,7 @@
 
       \begin{center}\textbf{Abstract}\end{center}
 
-      A language model can compute the right tax and still cite the wrong law. KarBench uses India's transition from the Income-tax Act, 1961 to the Income-tax Act, 2025 to measure these outcomes separately. We evaluate four model families from four providers in six configurations on the same 100 synthetic salaried profiles, crossed with three periods and three modes of access to rules (5,400 attempts). In closed-book Tax Year (TY) 2026--27, 303 of 600 attempts matched both rounded liabilities and the benchmark-designated regime, and zero supplied a complete citation set. With dated rules in context, 569 of 600 attempts supplied complete citations. Numeric scores measure agreement with an engine-generated reference under the recorded provider settings. Deadlines and cutoff enforcement differ by provider. A separate Grok-only analysis examines usable responses beyond the scoring cutoff.
+      A language model can compute the right tax and still cite the wrong law. KarBench uses India's transition from the Income-tax Act, 1961 to the Income-tax Act, 2025 to measure these outcomes separately. We evaluate four model families from four providers in six configurations on the same 100 synthetic salaried profiles across three periods and three modes of access to rules (5,400 attempts). In closed-book Tax Year (TY) 2026--27, 303 of 600 attempts matched both engine-reference liabilities and the designated regime, and zero supplied a complete citation set. With dated rules in context, 569 of 600 attempts supplied complete citations. In a separate analysis of 100 usable closed-book Grok answers for TY 2026--27, including 91 above the scoring cutoff, 88 matched both liabilities and the regime and none supplied section identifiers. Across all periods, only 12 of 475 finished closed-book answers with an incorrect liability pair matched another period's reference pair, indicating that cross-period confusion was more visible in citations than in tax amounts on these profiles.
 
       \par\medskip
 
@@ -251,7 +251,7 @@ For every finished closed-book episode, the diagnostic compares the pair of repo
 
 Across 1,522 finished closed-book episodes, 270 pairs matched only the requested period, 777 matched it and at least one alternative, 12 matched an alternative while missing the requested period, and 463 matched none. Among the 475 episodes whose pair missed the requested period, 12 (2.5\%) matched an alternative. The corresponding counts were 1 for DeepSeek, 3 and 2 for Luna low and medium, 2 and 4 for Haiku low and medium, and 0 for Grok. This analysis uses the frozen run aggregates in Supplement Table B6 \cite{karbench}.
 
-The two 1961 Act keys for FY 2024--25 and FY 2025--26 share both liabilities for 18 of the 100 profiles. A directional test would separately count mismatched FY 2025--26 responses that match FY 2024--25 and mismatched FY 2024--25 responses that match FY 2025--26. Table B6 pools target periods, so it does not resolve those counts. An alternative match is a signature of the tax amounts and cannot by itself identify which statute the model applied.
+Three of the 12 episodes matched only earlier reference periods, and nine matched only later periods. Of the 174 incorrect FY 2024--25 pairs, five matched both FY 2025--26 and TY 2026--27, and one matched TY 2026--27 alone. Of the 142 incorrect FY 2025--26 pairs, zero matched FY 2024--25 and three matched TY 2026--27. Of the 159 incorrect TY 2026--27 pairs, three matched both earlier periods. Supplement Table B7 counts each episode once \cite{karbench}. The FY 2024--25 and FY 2025--26 keys share both liabilities for 18 profiles, and the two newest keys share both for 98. When reference pairs coincide, a match cannot resolve which rules were used.
 
 \subsection{Provider cutoffs and the Grok-only sensitivity analysis}
 
@@ -373,7 +373,7 @@ Recomputing the pinned engine reproduced the 300 reference answers. A separate s
 
 \section{Conclusion}
 
-KarBench separates agreement on tax calculations from citation completeness for the 2025 Act on a controlled synthetic benchmark. In the recorded configurations, 303/600 closed-book attempts matched the engine's two liabilities and designated regime, and zero supplied a complete citation set. Rule-assisted attempts supplied complete citations in 569/600 cases. The findings support reporting amounts, legal references, and coverage separately. Generalization to other profiles and controlled provider comparisons requires further evidence.
+KarBench separates agreement on tax calculations from citation completeness for the 2025 Act on a controlled synthetic benchmark. In the recorded configurations, 303/600 closed-book attempts matched the engine's two liabilities and designated regime, and zero supplied a complete citation set. Rule-assisted attempts supplied complete citations in 569/600 cases. Across all periods, only 12 of 475 incorrect liability pairs from finished closed-book episodes exactly matched another period's reference pair. The observed transition was easier to see in section citations, in part because the two newest periods yield identical liability pairs for 98 profiles. The findings support reporting amounts, legal references, and coverage separately. Generalization to other profiles and controlled provider comparisons requires further evidence.
 
 \section*{Data and code availability}
 
@@ -396,9 +396,6 @@ Income Tax Department. \textit{General Questions FAQs}. Guidance on the transiti
 
 \bibitem{pib}
 Press Information Bureau, Ministry of Finance. \textit{Income-tax Act, 2025 comes into force from today (1st April, 2026)}. 1 April 2026. \href{https://www.pib.gov.in/PressReleasePage.aspx?PRID=2248005\&lang=1\&reg=3}{Release}
-
-\bibitem{rules2026}
-Central Board of Direct Taxes. \textit{Income-tax Rules, 2026}. Notification 22/2026, G.S.R. 198(E), 20 March 2026, Rule 279. \href{https://www.incometaxindia.gov.in/documents/d/guest/en-notified-it-rules-2026-20-03-2026-pdf}{Notified text}
 
 \bibitem{lebtl}
 N. Jain, N. Wadhwa, P. Goyal, S. Ghosh, S. Pawar, A. Shinde, K. Boinepally, V. V. Malpani, and R. K.
@@ -428,6 +425,9 @@ Y. Huang et al.
 When do LLMs apply the wrong law? Diagnosing LLM failures in temporal legal reasoning. 2026.
 \href{https://arxiv.org/abs/2608.14610}{arXiv:2608.14610}.
 
+\bibitem{lexkairos}
+Li, C., Feng, Z., Huang, Y., Ye, Y., and Xie, H. LexKairos: Benchmarking Legal Temporal Capabilities in LLMs. 2026. \href{https://arxiv.org/abs/2608.09106}{arXiv:2608.09106}
+
 \bibitem{sara}
 Holzenberger, N., Blair-Stanek, A., and Van Durme, B. A dataset for statutory reasoning in tax law entailment and question answering. \textit{Natural Legal Language Processing Workshop}, 2020. \href{https://arxiv.org/abs/2005.05257}{arXiv:2005.05257}
 
@@ -446,6 +446,15 @@ Juvekar, K., Bhattacharya, A., Khadloya, S., and Saxena, U. Are LLMs court-ready
 \bibitem{legalfictions}
 Dahl, M., Magesh, V., Suzgun, M., and Ho, D. E. Large legal fictions: Profiling legal hallucinations in large language models. \textit{Journal of Legal Analysis}, 16(1), 2024. \href{https://arxiv.org/abs/2401.01301}{arXiv:2401.01301}
 
+\bibitem{rules2026}
+Central Board of Direct Taxes. \textit{Income-tax Rules, 2026}. Notification 22/2026, G.S.R. 198(E), 20 March 2026, Rule 279. \href{https://www.incometaxindia.gov.in/documents/d/guest/en-notified-it-rules-2026-20-03-2026-pdf}{Notified text}
+
+\bibitem{round288a}
+Government of India. Income-tax Act, 1961, section 288A. \href{https://www.incometaxindia.gov.in/w/section-288a-31}{Income Tax Department}
+
+\bibitem{round288b}
+Government of India. Income-tax Act, 1961, section 288B. \href{https://wm.incometaxindia.gov.in/w/section-288b-50}{Income Tax Department}
+
 \bibitem{karbench}
 Jhala, D. \textit{KarBench}. Dataset, preprint, aggregate results, and supplementary methods, 2026. \href{https://github.com/Devrajsinh-Jhala/KarBench}{GitHub repository}
 
@@ -462,15 +471,6 @@ Anthropic. \textit{Claude}. Generative AI assistant. \href{https://www.anthropic
 
 \bibitem{chatgpt}
 OpenAI. \textit{ChatGPT}. Generative AI assistant. \href{https://openai.com/chatgpt/overview/}{Product documentation}
-
-\bibitem{lexkairos}
-Li, C., Feng, Z., Huang, Y., Ye, Y., and Xie, H. LexKairos: Benchmarking Legal Temporal Capabilities in LLMs. 2026. \href{https://arxiv.org/abs/2608.09106}{arXiv:2608.09106}
-
-\bibitem{round288a}
-Government of India. Income-tax Act, 1961, section 288A. \href{https://www.incometaxindia.gov.in/w/section-288a-31}{Income Tax Department}
-
-\bibitem{round288b}
-Government of India. Income-tax Act, 1961, section 288B. \href{https://wm.incometaxindia.gov.in/w/section-288b-50}{Income Tax Department}
 
 \end{thebibliography}
 

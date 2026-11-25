@@ -183,6 +183,15 @@ Each cell in Tables B4 and B5 gives correct or accepted / blank / stale / other 
 
 **Table B6.** Whether both reported rounded tax amounts match counterfactual reference values, among finished closed-book episodes across periods. A match on several years is ambiguous. Regime choice and citation validity are independent of this attribution diagnostic.
 
+| Requested period | Incorrect liability pairs | Earlier period only | Later period only | Earlier and later periods | No period matched |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| FY 2024-25 | 174 | 0 | 6 | 0 | 168 |
+| FY 2025-26 | 142 | 0 | 3 | 0 | 139 |
+| TY 2026-27 | 159 | 3 | 0 | 0 | 156 |
+| Total | 475 | 3 | 9 | 0 | 463 |
+
+**Table B7.** Direction of alternative-period matches among finished closed-book answers whose pair of rounded liabilities missed the requested period. Each episode is counted once. Five of the six later matches for FY 2024-25 matched both later periods. The sixth matched TY 2026-27 alone. The three later matches for FY 2025-26 matched TY 2026-27. All three earlier matches for TY 2026-27 matched both FY keys.
+
 ## C. Completion, output and tool use
 
 | Configuration | Mode | FY 2024–25 | FY 2025–26 | TY 2026–27 |
