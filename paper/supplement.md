@@ -2,6 +2,8 @@
 
 These tables and protocol records accompany the [preprint](manuscript.md). The run digests identify the underlying artifacts and do not by themselves provide the raw data.
 
+Revision 1.1 adds [Table C5](../results/preprint/table_c5_deadline.csv), the retrospective 240-second elapsed-time filter on the single-request modes. The [revision notes](revision-1.1.md) explain its scope and document the reference rounding check, scoring interpretation, and full-precision ledger.
+
 ## A. Scores and scoring sensitivities
 
 | Configuration | Mode | Finished | Exact tax | All citations | ₹1 full | Exact full |

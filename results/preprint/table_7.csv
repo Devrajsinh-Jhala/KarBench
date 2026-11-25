@@ -1,8 +1,8 @@
-"Configuration","Recorded usage","Uncertain reserve","Ledger total","Run cap"
-"DeepSeek Flash","$6.51","$0.07","$6.58","$10.00"
-"Luna low","$0.76","$0.03","$0.79","$10.00"
-"Luna medium","$1.04","$0.01","$1.05","$3.00"
-"Haiku low","$1.33","$0.00","$1.33","$4.00"
-"Haiku medium","$1.53","$0.02","$1.55","$4.00"
-"Grok medium","$44.05","$3.26","$47.31","$48.50"
-"Total","$55.22","$3.40","$58.61","—"
+Configuration,Recorded usage USD,Uncertain reserve USD,Ledger total USD,Run cap USD
+DeepSeek Flash,6.5085699,0.0723672,6.5809371,10
+Luna low,0.7589530,0.0286758,0.7876288,10
+Luna medium,1.0400283,0.0115202,1.0515485,3
+Haiku low,1.3319712,0,1.3319712,4
+Haiku medium,1.5274349,0.0233070,1.5507419,4
+Grok medium,44.050304,3.259676,47.309980,48.50
+Total,55.2172613,3.3955462,58.6128075,

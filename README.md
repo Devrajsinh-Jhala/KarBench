@@ -13,9 +13,9 @@ KarBench tests whether language models can calculate Indian personal income tax 
 
 ## Main result
 
-Under the Income-tax Act, 2025, the models got both tax amounts and the regime recommendation right on 303 of 600 closed-book attempts. None supplied a complete set of statutory citations. Supplying the applicable rule card raised the number of complete citation sets to 569 of 600.
+Under the Income-tax Act, 2025, 303 of 600 closed-book attempts matched both rounded engine liabilities and the benchmark-designated regime. None supplied a complete set of statutory citations. Supplying the applicable rule card raised the number of complete citation sets to 569 of 600.
 
-The cases are synthetic and scored against a frozen reference engine. The 30-case review provided qualitative feedback. The original provider responses and matching experiment snapshots are required for exact row-level reproduction of the reported runs.
+The cases are synthetic and scored against a frozen reference engine. The 30-case review provided qualitative feedback. The scores describe the recorded provider configurations, whose deadlines and cutoff enforcement differed. See [revision 1.1](paper/revision-1.1.md) for the corrections and added checks. Reproducing the reported runs row by row requires the original provider responses and matching experiment snapshots.
 
 ## Licensing
 
